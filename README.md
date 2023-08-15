@@ -1,6 +1,6 @@
-# Lambda build environment configurator
+# Security scanning with Trivy
 
-A github action which will help to configure the pipeline's environment and simplify managing of another pipelines by combining in one place a set of required actions.
+TBD
 
 ## How to use:
 
@@ -8,19 +8,17 @@ A github action which will help to configure the pipeline's environment and simp
 
 
 ```yml
-name: Configure environment
-uses: propertylift/github.action.lambda-env-config@latest
-with:
-  botSshKey: ${{ secrets.BOT_SSH_KEY }}
-  githubToken: ${{ secrets.GITHUB_TOKEN }}
-```
+- name: Configure environment
+  uses: propertylift/github.action.security-scan
+  with:
+    severity: '%list_of-severities%'
+    githubToken: ${{ secrets.GITHUB_TOKEN }}
+  ```
 
 
 ## Inputs:
 
-| Parameter Name                     | Description | Required | Default |
-|------------------------------------|-------------|----------|---------|
-| ansiblePythonInterpreter           | Location of python interpreter | No | /opt/pipx/venvs/ansible-core/bin/python |
-| botSshKey                          | BOT's SSH key used for iteract with GitHub | Yes | - |
-| githubToken                        | GITHUB_TOKEN | Yes | - |
-
+| Parameter Name                     | Required | Default  | Description |
+|------------------------------------|----------|----------|---------|
+| severity                           | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Location of python interpreter |
+| githubToken                        | Yes      | -        | GITHUB_TOKEN |
