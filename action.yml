@@ -18,13 +18,10 @@ runs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
-        # true - for issue which still don't have fixes
-        # false - for issue which have the ways how they could be fixed
         ignore-unfixed: false
         format: 'table'
         output: trivy-fs-scan-results.output
         severity: ${{ inputs.severity }}
-        # cache-dir:
         exit-code: 0
 
     - name: Store Trivy scan results in env
