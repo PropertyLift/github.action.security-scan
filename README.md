@@ -8,11 +8,11 @@ TBD
 
 
 ```yml
-- name: Configure environment
+- name: Run security scan
   uses: propertylift/github.action.security-scan
   with:
     severity: '%list_of-severities%'
-    githubToken: ${{ secrets.GITHUB_TOKEN }}
+    token: ${{ secrets.GITHUB_TOKEN }}
   ```
 
 
@@ -21,4 +21,4 @@ TBD
 | Parameter Name                     | Required | Default  | Description |
 |------------------------------------|----------|----------|---------|
 | severity                           | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Location of python interpreter |
-| githubToken                        | Yes      | -        | GITHUB_TOKEN |
+| token                              | Yes      | -        | GITHUB_TOKEN |
