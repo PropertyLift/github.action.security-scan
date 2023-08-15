@@ -1,6 +1,45 @@
-name: # the name of the action
-description: # additional descriptive info about the action
+name: Security scan
+description: Common Github Action for source code security scanning
+
+inputs:
+  token:
+    description: GitHub Token
+    required: true
+    default: ''
+  severity:
+    description: List of severities
+    required: true
+    default: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-# for additional options, see: https://help.github.com/en/articles/metadata-syntax-for-github-actions
+  using: composite
+  steps:
+    - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          # true - for issue which still don't have fixes
+          # false - for issue which have the ways how they could be fixed
+          ignore-unfixed: false
+          format: 'table'
+          output: trivy-fs-scan-results.output
+          severity: ${{ inputs.severity }}
+          # cache-dir:
+          exit-code: 0
+
+      - name: Store Trivy scan results in env
+        run: |
+            echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
+            cat trivy-fs-scan-results.output >> $GITHUB_ENV
+            echo 'EOF' >> $GITHUB_ENV
+
+      - name: Comment Trivy scan results in PR
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          message: |
+            ## Trivy results:
+            ### Source code scaning results
+            ```
+            ${{ env.TRIVY_FS_RESULTS }}
+            ```
+          GITHUB_TOKEN: ${{ inputs.token }}
