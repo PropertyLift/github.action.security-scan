@@ -24,13 +24,23 @@ Using the GitHub REST API provided by the [thollander/actions-comment-pull-reque
 2. Update action with force fail parameter of runing pipeline ```yml exit-code: 0 ```
 
 ## How to use:
-### Example 1: Basic setup, no arguments needed
+
+### Example 1: Basic setup, only [GitHub Token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication) required
 
 ```yml
 - name: Run security scan
   uses: propertylift/github.action.security-scan
   with:
-    severity: '%list_of-severities%'
+    token: ${{ secrets.GITHUB_TOKEN }}
+  ```
+
+### Example 2: Extended configuration
+
+```yml
+- name: Run security scan
+  uses: propertylift/github.action.security-scan
+  with:
+    severity: 'MEDIUM,HIGH,CRITICAL'
     token: ${{ secrets.GITHUB_TOKEN }}
   ```
 
@@ -38,5 +48,5 @@ Using the GitHub REST API provided by the [thollander/actions-comment-pull-reque
 
 | Parameter Name                     | Required | Default  | Description |
 |------------------------------------|----------|----------|---------|
-| severity                           | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Location of python interpreter |
+| severity                           | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Severities of vulnerabilities to scanned for and displayed  |
 | token                              | Yes      | -        | GITHUB_TOKEN |
