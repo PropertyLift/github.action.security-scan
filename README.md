@@ -1,8 +1,24 @@
-# template.action
+# Security scanning with Trivy
 
-Basic template repo for Github actions
+TBD
 
-Please provide at a minimum the following sections:
+## How to use:
 
-1. Introduction to what the action is for
-2. "How to use" guide for using the action in a workflow (providing lightweight examples is recommended)
+### Example 1: Basic setup, no arguments needed
+
+
+```yml
+- name: Configure environment
+  uses: propertylift/github.action.security-scan
+  with:
+    severity: '%list_of-severities%'
+    githubToken: ${{ secrets.GITHUB_TOKEN }}
+  ```
+
+
+## Inputs:
+
+| Parameter Name                     | Required | Default  | Description |
+|------------------------------------|----------|----------|---------|
+| severity                           | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Location of python interpreter |
+| githubToken                        | Yes      | -        | GITHUB_TOKEN |
