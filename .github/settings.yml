@@ -1,8 +1,8 @@
 # see: https://github.com/probot/settings
 
 repository:
-  name: github.action.security-scan # replace
-  description: Common step which will prepare environment for building # replace
+  name: github.action.security-scan
+  description: Composite action for running security scan
   topics: # replace
   private: false
   has_issues: false
