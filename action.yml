@@ -16,7 +16,6 @@ inputs:
     default: trivy-scan-results.output
 
 runs:
-  runs-on: ubuntu-latest
   using: composite
   steps:
     - name: Run Trivy vulnerability scanner in repo mode
