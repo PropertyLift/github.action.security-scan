@@ -24,7 +24,7 @@ runs:
         severity: ${{ inputs.severity }}
         exit-code: 0
 
-    - name: Store Trivy scan results in env
+    - name: Get Trivy scan results
       id: trivy-get-results
       shell: bash -e {0}
       run: |
@@ -34,11 +34,12 @@ runs:
       if: steps.trivy-get-results.outputs.trivy-scan-result != 'empty'
       shell: bash -e {0}
       run: |
+          echo ${{ steps.trivy-get-results.outputs.trivy-scan-result }}
           echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
           cat trivy-scan-results.output >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-    # - name: Comment Trivy scan results in PR
+    # - name: Publish Trivy scan results in PR
     #   uses: thollander/actions-comment-pull-request@v1
     #   # if: steps.trivy-get-results.outputs.trivy-scan-result != 'empty'
     #   with:
