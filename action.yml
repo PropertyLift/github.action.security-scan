@@ -20,19 +20,26 @@ runs:
         scan-type: 'fs'
         ignore-unfixed: false
         format: 'table'
-        output: trivy-fs-scan-results.output
+        output: trivy-scan-results.output
         severity: ${{ inputs.severity }}
         exit-code: 0
+
+    - name: Read Trivy results
+      id: trivy-get-results
+      shell: bash -e {0}
+      run: |
+          echo "trivy_scan_result=$(jq ".Results[].Vulnerabilities" trivy-scan-results.output)" >> $GITHUB_OUTPUT
 
     - name: Store Trivy scan results in env
       shell: bash -e {0}
       run: |
           echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
-          cat trivy-fs-scan-results.output >> $GITHUB_ENV
+          cat trivy-scan-results.output >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
     - name: Comment Trivy scan results in PR
       uses: thollander/actions-comment-pull-request@v1
+      if: steps.trivy-get-results.outputs.trivy_scan_result != '[]'
       with:
         message: |
           ## Trivy results:
