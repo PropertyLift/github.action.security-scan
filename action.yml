@@ -25,6 +25,7 @@ runs:
         exit-code: 0
 
     - name: Store Trivy scan results in env
+      shell: bash -e {0}
       run: |
           echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
           cat trivy-fs-scan-results.output >> $GITHUB_ENV
