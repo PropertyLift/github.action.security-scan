@@ -36,7 +36,7 @@ runs:
       shell: bash -e {0}
       run: |
           echo "----DEBUG-----"
-          echo ${{ steps.trivy-get-results.outputs.trivy-scan-result }}
+          echo ${{ steps.trivy-get-results.outputs.trivy-result }}
           echo "----DEBUG-----"
           echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
           cat trivy-scan-results.output >> $GITHUB_ENV
