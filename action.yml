@@ -24,23 +24,23 @@ runs:
         severity: ${{ inputs.severity }}
         exit-code: 0
 
-    - shell: bash
-      # env:
-      #   JSON_DOC: ${{ toJSON(trivy-scan-results.output) }}
+    - name: Store Trivy scan results in env
+      id: trivy-get-results
+      shell: bash -e {0}
       run: |
-        echo ${{ toJSON(trivy-scan-results.output) }}
+          [ -s trivy-scan-results.output ] || echo "Result is empty" && echo 'trivy-result=empty' >> $GITHUB_OUTPUT
 
-    # - name: Store Trivy scan results in env
-    #   if: toJSON(trivy-scan-results.output) != "{}"
-    #   shell: bash -e {0}
-    #   run: |
-    #       echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
-    #       cat trivy-scan-results.output >> $GITHUB_ENV
-    #       echo 'EOF' >> $GITHUB_ENV
+    - name: Store Trivy scan results in env
+      if: steps.trivy-get-results.outputs.trivy-scan-result != 'empty'
+      shell: bash -e {0}
+      run: |
+          echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
+          cat trivy-scan-results.output >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
     # - name: Comment Trivy scan results in PR
     #   uses: thollander/actions-comment-pull-request@v1
-    #   # if: steps.trivy-get-results.outputs.trivy-scan-result != '[]'
+    #   # if: steps.trivy-get-results.outputs.trivy-scan-result != 'empty'
     #   with:
     #     message: |
     #       ## Trivy results:
