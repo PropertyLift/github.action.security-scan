@@ -46,7 +46,9 @@ Using the GitHub REST API provided by the [thollander/actions-comment-pull-reque
 
 ## Inputs:
 
-| Parameter Name                     | Required | Default  | Description |
-|------------------------------------|----------|----------|---------|
-| severity                           | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Severities of vulnerabilities to scanned for and displayed  |
-| token                              | Yes      | -        | GITHUB_TOKEN |
+| Parameter Name | Required | Default                          | Description                                                |
+| -------------- | -------- | -------------------------------- | ---------------------------------------------------------- |
+| severity       | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Severities of vulnerabilities to scanned for and displayed |
+| token          | Yes      | -                                | GITHUB_TOKEN                                               |
+| resultFile     | No       | trivy-scan-results.output        | File which will contain security scan result               |
+
