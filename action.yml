@@ -25,11 +25,10 @@ runs:
         exit-code: 0
 
     - shell: bash
-      env:
-        JSON_DOC: ${{ toJSON(trivy-scan-results.output) }}
+      # env:
+      #   JSON_DOC: ${{ toJSON(trivy-scan-results.output) }}
       run: |
-        printf '%s\n' "$JSON_DOC" > foo.json
-        cat foo.json
+        echo ${{ toJSON(trivy-scan-results.output) }}
 
     # - name: Store Trivy scan results in env
     #   if: toJSON(trivy-scan-results.output) != "{}"
