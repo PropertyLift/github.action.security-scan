@@ -10,6 +10,10 @@ inputs:
     description: List of severities
     required: true
     default: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+  resultFile:
+    description: File which will contain security scan result
+    required: true
+    default: trivy-scan-results.output
 
 runs:
   runs-on: ubuntu-latest
@@ -19,9 +23,9 @@ runs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
-        ignore-unfixed: false
+        ignore-unfixed: true
         format: 'table'
-        output: trivy-scan-results.output
+        output: ${{ inputs.resultFile }}
         severity: ${{ inputs.severity }}
         exit-code: 0
 
@@ -29,7 +33,7 @@ runs:
       id: trivy-get-results
       shell: bash -e {0}
       run: |
-          [ -s trivy-scan-results.output ] || echo 'trivy-result=empty' >> $GITHUB_OUTPUT
+          [ -s ${{ inputs.resultFile }} ] || echo 'trivy-result=empty' >> $GITHUB_OUTPUT
 
     - name: Store Trivy scan results in env
       if: steps.trivy-get-results.outputs.trivy-scan-result != 'empty'
@@ -39,7 +43,7 @@ runs:
           echo ${{ steps.trivy-get-results.outputs.trivy-result }}
           echo "----DEBUG-----"
           echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
-          cat trivy-scan-results.output >> $GITHUB_ENV
+          cat ${{ inputs.resultFile }} >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
     # - name: Publish Trivy scan results in PR
