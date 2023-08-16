@@ -10,8 +10,13 @@ inputs:
     description: List of severities
     required: true
     default: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+  resultFile:
+    description: File which will contain security scan result
+    required: true
+    default: trivy-scan-results.output
 
 runs:
+  runs-on: ubuntu-latest
   using: composite
   steps:
     - name: Run Trivy vulnerability scanner in repo mode
@@ -20,18 +25,27 @@ runs:
         scan-type: 'fs'
         ignore-unfixed: false
         format: 'table'
-        output: trivy-fs-scan-results.output
+        output: ${{ inputs.resultFile }}
         severity: ${{ inputs.severity }}
         exit-code: 0
 
+    - name: Get Trivy scan results
+      id: trivy-get-results
+      shell: bash -e {0}
+      run: |
+          [ -s ${{ inputs.resultFile }} ] || echo 'trivy-result=empty' >> $GITHUB_OUTPUT
+
     - name: Store Trivy scan results in env
+      if: steps.trivy-get-results.outputs.trivy-result != 'empty'
+      shell: bash -e {0}
       run: |
           echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
-          cat trivy-fs-scan-results.output >> $GITHUB_ENV
+          cat ${{ inputs.resultFile }} >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-    - name: Comment Trivy scan results in PR
+    - name: Publish Trivy scan results in PR
       uses: thollander/actions-comment-pull-request@v1
+      if: steps.trivy-get-results.outputs.trivy-result != 'empty'
       with:
         message: |
           ## Trivy results:
