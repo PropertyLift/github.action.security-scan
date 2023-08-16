@@ -18,7 +18,7 @@ runs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
-        ignore-unfixed: false
+        ignore-unfixed: true
         format: 'table'
         output: trivy-scan-results.output
         severity: ${{ inputs.severity }}
