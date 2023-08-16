@@ -12,13 +12,14 @@ inputs:
     default: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
 
 runs:
+  runs-on: ubuntu-latest
   using: composite
   steps:
     - name: Run Trivy vulnerability scanner in repo mode
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
-        ignore-unfixed: true
+        ignore-unfixed: false
         format: 'table'
         output: trivy-scan-results.output
         severity: ${{ inputs.severity }}
