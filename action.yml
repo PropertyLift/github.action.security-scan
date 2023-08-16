@@ -29,7 +29,7 @@ runs:
       id: trivy-get-results
       shell: bash -e {0}
       run: |
-          [ -s trivy-scan-results.output ] || echo "Result is empty" && echo 'trivy-result=empty' >> $GITHUB_OUTPUT
+          [ -s trivy-scan-results.output ] || echo 'trivy-result=empty' >> $GITHUB_OUTPUT
 
     - name: Store Trivy scan results in env
       if: steps.trivy-get-results.outputs.trivy-scan-result != 'empty'
