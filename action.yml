@@ -18,6 +18,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: DEBUG
+      shell: bash -e {0}
+      run: |
+          pwd
+          ls -la
     - name: Run Trivy vulnerability scanner in repo mode
       uses: aquasecurity/trivy-action@master
       with:
@@ -28,7 +33,7 @@ runs:
         template: "@trivy_markdown.tpl"
         output: ${{ inputs.resultFile }}
         severity: ${{ inputs.severity }}
-        exit-code:
+        exit-code: 0
 
     - name: Get Trivy scan results
       id: trivy-get-results
