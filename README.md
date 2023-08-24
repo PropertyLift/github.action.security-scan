@@ -50,5 +50,6 @@ Using the GitHub REST API provided by the [thollander/actions-comment-pull-reque
 | -------------- | -------- | -------------------------------- | ---------------------------------------------------------- |
 | severity       | No       | UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL | Severities of vulnerabilities to scanned for and displayed |
 | token          | Yes      | -                                | GITHUB_TOKEN                                               |
-| resultFile     | No       | trivy-scan-results.output        | File which will contain security scan result               |
+| resultFile     | No       | trivy-scan-results.output        | File contain security scan result                          |
+| templateFile   | No       | trivy_markdown.tpl               | File containe Trivy template data                          |
 
