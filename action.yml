@@ -118,23 +118,22 @@ runs:
       run: |
           [ -s ${{ inputs.resultFile }} ] || echo 'trivy-result=empty' >> $GITHUB_OUTPUT
 
-    # - name: Store Trivy scan results in env
-    #   if: steps.trivy-get-results.outputs.trivy-result != 'empty'
-    #   shell: bash -e {0}
-    #   run: |
-    #       echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
-    #       cat ${{ inputs.resultFile }} >> $GITHUB_ENV
-    #       echo 'EOF' >> $GITHUB_ENV
+    - name: Store Trivy scan results in env
+      if: steps.trivy-get-results.outputs.trivy-result != 'empty'
+      shell: bash -e {0}
+      run: |
+          echo 'TRIVY_FS_RESULTS<<EOF' >> $GITHUB_ENV
+          cat ${{ inputs.resultFile }} >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
     - name: Publish Trivy scan results in PR
       uses: thollander/actions-comment-pull-request@v1
       if: steps.trivy-get-results.outputs.trivy-result != 'empty'
       with:
-        # message: |
-        #   ## Trivy results:
-        #   ### Source code scaning results
-        #   ```
-        #   ${{ env.TRIVY_FS_RESULTS }}
-        #   ```
-        filePath: ${{ inputs.resultFile }}
+        message: |
+          ## Trivy results:
+          ### Source code scaning results
+          ```
+          ${{ env.TRIVY_FS_RESULTS }}
+          ```
         GITHUB_TOKEN: ${{ inputs.token }}
