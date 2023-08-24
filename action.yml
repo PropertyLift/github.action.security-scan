@@ -127,7 +127,7 @@ runs:
           echo 'EOF' >> $GITHUB_ENV
 
     - name: Publish Trivy scan results in PR
-      uses: thollander/actions-comment-pull-request@2
+      uses: thollander/actions-comment-pull-request@v2
       if: steps.trivy-get-results.outputs.trivy-result != 'empty'
       with:
         message: |
