@@ -8,20 +8,24 @@ inputs:
     default: ''
   severity:
     description: List of severities
-    required: true
+    required: false
     default: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
   resultFile:
     description: File which will contain security scan result
-    required: true
+    required: false
     default: trivy-scan-results.output
+  templateFile:
+    description: Trivy template file name
+    required: false
+    default: trivy_markdown.tpl
 
 runs:
   using: composite
   steps:
-    - name: DEBUG
+    - name: Create Trivy template
       shell: bash -e {0}
       run: |
-            cat <<EOF > trivy_markdown.tpl
+            cat <<EOF > ${{ inputs.templateFile }}
             {{- if . }}
             {{- range . }}
             {{- if (gt (len .Vulnerabilities) 0) }}
@@ -76,41 +80,16 @@ runs:
             {{- end }}
             EOF
 
-    - name: DEBUG
-      shell: bash -e {0}
-      run: |
-            echo "----------------------------------------------------------------"
-            ls -la
-            echo "----------------------------------------------------------------"
-            pwd
-            echo "----------------------------------------------------------------"
-            echo "cat trivy_markdown.tpl"
-            cat trivy_markdown.tpl
-            echo "----------------------------------------------------------------"
-
     - name: Run Trivy vulnerability scanner in repo mode
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
         ignore-unfixed: false
-        # format: 'table'
         format: template
-        template: "@trivy_markdown.tpl"
+        template: "@${{ inputs.templateFile }}"
         output: ${{ inputs.resultFile }}
         severity: ${{ inputs.severity }}
         exit-code: 0
-
-    - name: DEBUG
-      shell: bash -e {0}
-      run: |
-            echo "----------------------------------------------------------------"
-            ls -la
-            echo "----------------------------------------------------------------"
-            pwd
-            echo "----------------------------------------------------------------"
-            echo "cat ${{ inputs.resultFile }}"
-            cat ${{ inputs.resultFile }}
-            echo "----------------------------------------------------------------"
 
     - name: Get Trivy scan results
       id: trivy-get-results
