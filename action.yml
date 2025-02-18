@@ -107,7 +107,7 @@ runs:
 
     - name: Publish Trivy scan results in PR
       uses: thollander/actions-comment-pull-request@v2
-      if: steps.trivy-get-results.outputs.trivy-result != 'empty'
+      if: steps.trivy-get-results.outputs.trivy-result != 'empty' && github.event_name == 'pull_request'
       with:
         message: |
           ## Trivy results:
